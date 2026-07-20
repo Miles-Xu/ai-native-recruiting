@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试纪要 · 张三</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 32px 16px;
+  background: #f3f4f6;
+  font-family: -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+  color: #1f2328; line-height: 1.65;
+}
+.report {
+  max-width: 860px; margin: 0 auto; background: #fff;
+  border: 1px solid #e3e6ea; border-radius: 4px;
+  padding: 36px 44px 28px; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.r-head { border-top: 3px solid #283593; border-bottom: 3px double #283593; padding: 14px 0 12px; }
+.r-head h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: .5px; color: #111; }
+.r-head .sub { margin-top: 4px; font-size: 13px; color: #6b7280; }
+.kpi { display: flex; flex-wrap: wrap; align-items: stretch; margin: 18px 0 6px; }
+.kpi .tag { align-self: center; font-size: 12px; font-weight: 700; color: #9ca3af;
+  letter-spacing: 2px; padding-right: 14px; }
+.kpi .cell { flex: 1 1 0; min-width: 110px; padding: 4px 14px; border-left: 1px solid #e3e6ea; }
+.kpi .k-label { font-size: 11px; color: #9ca3af; }
+.kpi .k-value { font-size: 15px; font-weight: 700; margin-top: 2px; }
+section.block { margin-top: 22px; }
+section.block h2 { font-size: 16px; margin: 0 0 8px; color: #111;
+  border-bottom: 1px solid #eceef0; padding-bottom: 6px; }
+section.block h2 .num { color: #283593; font-weight: 700; margin-right: 8px; }
+section.block ul { margin: 0; padding-left: 20px; }
+section.block li { margin: 4px 0; }
+.reco { margin-top: 24px; border: 1px solid #e3e6ea; border-radius: 4px; overflow: hidden; }
+.reco .reco-h { background: #283593; color: #fff; font-weight: 700; font-size: 14px;
+  padding: 8px 16px; }
+.reco table { width: 100%; border-collapse: collapse; }
+.reco td { padding: 8px 16px; border-top: 1px solid #eceef0; font-size: 14px; vertical-align: top; }
+.reco td.f-label { width: 130px; color: #6b7280; font-weight: 600; white-space: nowrap; }
+.reco tr.warn td { background: #fff7ed; }
+.reco tr.warn td.f-value { color: #b26a00; font-weight: 600; }
+.r-foot { margin-top: 26px; padding-top: 12px; border-top: 1px solid #eceef0;
+  font-size: 12px; color: #9ca3af; }
+details.src { margin-top: 16px; }
+details.src summary { cursor: pointer; font-size: 13px; color: #6b7280; user-select: none; }
+details.src pre { margin-top: 10px; padding: 14px; background: #f8f9fa; border: 1px solid #eceef0;
+  border-radius: 4px; white-space: pre-wrap; word-break: break-word; font-size: 12.5px;
+  line-height: 1.6; color: #374151; max-height: 460px; overflow: auto; }
+</style>
+</head>
+<body>
+<div class="report">
+  <div class="r-head">
+    <h1>面试纪要 · 张三</h1>
+    <div class="sub">推理引擎工程师 | A司</div>
+  </div>
+  <div class="kpi"><div class="tag">KPI</div><div class="cell"><div class="k-label">当前总包</div><div class="k-value" style="color:#1565c0">约 80 万</div></div><div class="cell"><div class="k-label">当前公司</div><div class="k-value" style="color:#283593">A司</div></div><div class="cell"><div class="k-label">流程进度</div><div class="k-value" style="color:#b26a00">⚠️ B司 已到终面</div></div><div class="cell"><div class="k-label">可约时间</div><div class="k-value" style="color:#2e7d32">工作日晚 8 点后</div></div></div>
+  <section class="block"><h2><span class="num">1.</span>当前工作与技术方向</h2><ul><li>目前在 <strong>A司</strong> 推理优化团队,做大模型在线推理的性能优化,方向包括 <strong>KV Cache 管理</strong>与量化部署</li><li>自述主导过一次推理服务成本优化,GPU 用量<strong>下降约三成</strong>(未给出具体基数)</li><li>团队规模约 10 人,候选人负责其中调度子模块</li></ul></section><section class="block"><h2><span class="num">2.</span>看机会原因</h2><ul><li>认为当前业务进入维护期,<strong>新技术空间有限</strong></li><li>希望去模型能力更强的团队,「想做更靠近模型本体的优化」</li></ul></section><section class="block"><h2><span class="num">3.</span>流程与竞对信息</h2><ul><li>正在面 <strong>B司</strong>,已到终面阶段,预计两周内出结果</li><li>另有一家创业公司约了下周初聊,候选人称「只是先聊聊」</li><li>HR 同步:我们流程可以加急,候选人表示可以配合安排(HR 介绍/同步)</li></ul></section><section class="block"><h2><span class="num">4.</span>薪资与期望</h2><ul><li>当前总包<strong>约 80 万</strong>(base + 股票,具体拆分未明确提及)</li><li>期望涨幅「行业正常水平即可」,未给出具体数字</li><li>期望地点:未明确提及</li></ul></section>
+  <div class="reco"><div class="reco-h">📋 推荐评语</div><table><tr><td class="f-label">目前状态</td><td class="f-value">在职,A司推理优化团队,积极看机会</td></tr><tr><td class="f-label">目前&amp;期望地点</td><td class="f-value">未明确提及</td></tr><tr><td class="f-label">基本情况</td><td class="f-value">推理方向工程师,主导过成本优化项目,职级未明确提及</td></tr><tr class="warn"><td class="f-label">当前流程</td><td class="f-value">⚠️ B司已到终面,预计两周内出结果,另有 1 家创业公司待聊——建议加急推进</td></tr><tr><td class="f-label">看机会原因</td><td class="f-value">当前业务进入维护期,希望做更靠近模型本体的优化</td></tr></table></div>
+  <div class="r-foot">生成时间：2026-07-20 18:42 中国标准时间 ｜ 来源：本地会议转写</div>
+  <details class="src"><summary>展开原始转写</summary><pre>[以下为虚构的示例转写,用于演示纪要生成效果。人物、公司均不存在。]
+
+HR: 喂,张三你好,能听到吗?
+张三: 能听到,你好你好。
+HR: 好的,今天主要是想跟你快速对一下背景和意向。先简单介绍下你现在做的方向?
+张三: 好,我现在在A司,推理优化这边,主要做在线推理的性能优化,KV Cache管理、量化部署这些。之前主导过一次成本优化,GPU用量降了差不多三成吧。
+HR: 团队大概多大?你负责哪部分?
+张三: 组里十个人左右,我负责调度那个子模块。
+HR: 明白。这次看机会主要是什么考虑?
+张三: 主要是现在业务进了维护期,新东西不多了。我还是想去模型能力强一点的团队,做更靠近模型本体的优化。
+HR: 理解。现在手上有别的流程吗?
+张三: 有,B司已经到终面了,估计两周内出结果。还有一家创业公司约了下周初聊,不过那个只是先聊聊。
+HR: OK,那我们这边节奏得快一点。你现在的包方便说下吗?
+张三: 总包80万左右,base加股票。
+HR: 期望呢?
+张三: 涨幅行业正常水平就行,没有特别硬的数字。
+HR: 好。时间上你一般什么时候方便面试?
+张三: 工作日晚上八点以后都可以。
+HR: 行,那我这边尽快安排,咱们保持联系。
+张三: 好的,辛苦。
+</pre></details>
+</div>
+</body>
+</html>

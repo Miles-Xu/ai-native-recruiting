@@ -1,0 +1,15 @@
+# 数据与临时产物（永不入库）
+**/_tmp/*
+!**/_tmp/.gitkeep
+纪要档案/
+archive/
+*.xlsx
+*.xls
+*.pdf
+*.bak*
+*.jsonl
+__pycache__/
+*.pyc
+
+# 本地个人配置
+.claude/settings.local.json
