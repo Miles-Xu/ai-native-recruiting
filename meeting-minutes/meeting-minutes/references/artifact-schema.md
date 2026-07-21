@@ -24,7 +24,7 @@
   "candidate_name": "张三",
   "title": "面试纪要 · 张三",
   "subtitle": "大模型评测岗 | 模型评测 / 平台开发",
-  "date": "2026-06-30",
+  "date": "2026-01-15",
   "kpi": [
     {"label": "总包", "value": "60W", "tone": "green"},
     {"label": "当前", "value": "A司 14级", "tone": "blue"},
@@ -63,7 +63,7 @@
 - `kpi[]`:4 项以内,每项 `{label, value, tone}`;`tone` 见 `html-quality.md` 语义色表,缺省 indigo
 - `sections[]`:每个 `{title, bullets[]}`;bullet 支持 `**加粗**`(渲染成 `<strong>`)
 - `recommendation[]`:推荐评语 5 字段,`{label, value}`;`value` 含 `⚠` 的行自动高亮
-- `source`:`{"kind": "transcript", "file": "transcript.txt"}`(本地转写,无飞书 token/url)
+- `source`:`{"kind": "transcript", "file": "transcript.txt"}`(本地转写,无外部平台 token/url)
 - `date` / `generated_at`:可不填,脚本自动补(日期默认今天,生成时间为本机当前时刻)
 
 ## Hard Rules

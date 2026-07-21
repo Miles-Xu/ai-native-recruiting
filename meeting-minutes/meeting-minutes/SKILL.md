@@ -7,7 +7,7 @@ description: |
 # Meeting Minutes Generator(本地 HTML 版)
 
 > 路径:`meeting-minutes/SKILL.md`
-> 版本:2.0(2026-06-30,本地化:飞书卡片 → 商务报告风 HTML;发送 → 本地三件套落盘)
+> 版本:2.0(本地 HTML 版:商务报告风 HTML + 本地三件套落盘)
 
 ## Package Layout
 
@@ -171,10 +171,3 @@ py -3.12 meeting-minutes/scripts/render_minutes.py --structured <临时json> --t
 | HTML"很完整"但事实不实 | 模型补全倾向过强 | 缺字段写「未明确提及」,降级输出 |
 | 转写只有碎片句子 | 强行套完整纪要模板 | 改走简版或信息不足卡片 |
 | 只在聊天回了纯文本 | 没激活本 skill 或偷降级 | 回到本 skill,补做 HTML 渲染+落盘闭环 |
-
----
-
-## 历史变更
-
-- **v2.0 (2026-06-30)**: 本地化重构。输入飞书 docx URL → 粘贴转写文本;产物飞书交互卡片 → 商务报告风 HTML;发送脚本(send_card/batch_send_cards)→ 删除;三落盘(card.json/structured/md)→ 本地三件套(transcript.txt/纪要.html/structured.json);新增 `render_minutes.py`;card-quality.md → html-quality.md
-- **v1.x (2026-04 ~ 05)**: 飞书卡片版历史(防窜校验、推荐评语段、说话人归属、字段抽取、三档降级等内容规范均沿用至 v2.0)
