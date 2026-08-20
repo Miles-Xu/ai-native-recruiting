@@ -26,7 +26,9 @@
 ai-native-recruiting/
 ├── resume-screening/          # 工作流 1:简历筛选
 │   ├── CLAUDE.md              #   筛选 SOP(评分框架 + 岗位偏好 + 输出格式)
-│   └── jobs/                  #   岗位库(JD 文件,frontmatter 管理)
+│   ├── jobs/                  #   岗位库(JD 文件,frontmatter 管理)
+│   ├── scripts/               #   extract_resume.py(PDF 抽文本)
+│   └── examples/              #   端到端示例:输入简历 PDF + 实跑产出的结论
 └── meeting-minutes/           # 工作流 2:纪要整理
     ├── CLAUDE.md              #   纪要 SOP(触发/硬规则/落盘约定)
     └── meeting-minutes/       #   skill 包(规范 + 渲染脚本 + 示例)
@@ -46,6 +48,8 @@ ai-native-recruiting/
 - **偏好编码模式**:示例 SOP 里演示了四种真实存在的口径类型——高 bar 核验型(JOB-101)、分档型(JOB-102)、放宽迁移型+吸引话术(JOB-103)、混搭推荐型(JOB-104)
 - **开源贡献要亲自核验**:简历提到开源项目,先去 GitHub 看真实贡献再下结论
 - **顺手做 mapping**:方向不对但背景好的人进 mapping 池,pre-talk 清单里埋了组织信息问题
+
+想直接看效果,去 [`resume-screening/examples/`](resume-screening/examples/)——两组「输入简历 → 筛选结论」对照。其中一份的看点是简历表面堆满 Megatron/CUDA/千卡关键词、核验后被判定训练侧全是"用轮子"、排除高 bar 岗位并重新落到正确岗位,这是这套方法最吃功力的地方。
 
 ### 工作流 2:纪要整理(`meeting-minutes/`)
 
