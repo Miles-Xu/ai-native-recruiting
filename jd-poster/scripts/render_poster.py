@@ -22,7 +22,10 @@ MEASURE = r"""
   nodes.forEach((el, i) => {
     const box = el.getBoundingClientRect();
     const range = document.createRange();
-    range.selectNodeContents(el);
+    // h1 只量主标题文本节点，与 sweep_width.py 口径一致
+    // （模板的 h1 里含 .sub 副标题 span，整体量会恒为 2 行，让"标题 1 行"自检永远误报）
+    if (el.tagName === 'H1' && el.firstChild) range.selectNodeContents(el.firstChild);
+    else range.selectNodeContents(el);
     const rects = [...range.getClientRects()].filter(r => r.width > 1 && r.height > 1);
     if (!rects.length) return;
     // 按 top 聚成行
