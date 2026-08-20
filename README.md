@@ -1,10 +1,12 @@
 # AI Native 招聘工作流
 
-> 一线招聘（TA/猎头/HRBP）的两条 AI 工作流：**简历筛选** 和 **面试纪要整理**。基于 Claude Code 的 `CLAUDE.md` 机制,把招聘 SOP 直接编码成 agent 可执行的规范,开箱即用。
+> 一线招聘（TA/猎头/HRBP）的三条 AI 工作流：**简历筛选**、**面试纪要整理**、**JD 海报**。基于 Claude Code 的 `CLAUDE.md` 机制,把招聘 SOP 直接编码成 agent 可执行的规范,开箱即用。
 
 ## ⚠️ 虚构声明
 
-仓库中出现的公司「烛龙智能」、全部岗位编号(JOB-1xx)、用人经理姓名(陈默/林澈/吴桐/沈一舟)、团队偏好口径、示例候选人(张三)**均为虚构**,仅用于演示。方法论来自真实的一线大模型 infra 招聘实践,数据不是。
+**简历筛选**与**纪要整理**里的公司「烛龙智能」、全部岗位编号(JOB-1xx)、用人经理姓名(陈默/林澈/吴桐/沈一舟)、团队偏好口径、示例候选人(张三/李四/王五)**均为虚构**,仅用于演示。方法论来自真实的一线大模型 infra 招聘实践,数据不是。
+
+**例外:JD 海报**(`jd-poster/`)的模板与范本海报保留了作者所在公司的真实品牌与在招 JD——这些本来就是对外投放的招聘物料,留着比换成假数据更能说明产出效果。相应地,那些品牌元素(logo/配色/slogan)与 JD 文本归其权利人所有,**不在本仓库 MIT 许可范围内**;你要复用请换成自己的。
 
 ## 这是什么
 
@@ -12,6 +14,7 @@
 
 - 打开 Claude Code,甩一个简历 PDF 路径进去,agent 自动走完「读 JD → 提取画像 → 匹配岗位 → 评分 → 输出结论 + pre-talk 清单」全流程
 - 粘一段面试录音转写进去,agent 自动生成商务报告风 HTML 纪要并归档落盘(原文 + JSON + HTML 三件套)
+- 贴一份 JD 进去,agent 量化排版判据、扫出最优宽度,出一张可直接发的海报 PNG
 
 ### 为什么是 CLAUDE.md 而不是 prompt 模板
 
@@ -20,7 +23,7 @@
 3. **可版本管理**:git 管理 SOP 变更,新人接手时读一遍 CLAUDE.md 就等于完成交接
 4. **防走样**:硬规则(如纪要的"禁止脑补"、筛选的"关键词≠够格")写进规范层,每次执行都生效,不靠每次手动叮嘱
 
-## 两条工作流
+## 三条工作流
 
 ```
 ai-native-recruiting/
@@ -29,13 +32,18 @@ ai-native-recruiting/
 │   ├── jobs/                  #   岗位库(JD 文件,frontmatter 管理)
 │   ├── scripts/               #   extract_resume.py(PDF 抽文本)
 │   └── examples/              #   端到端示例:输入简历 PDF + 实跑产出的结论
-└── meeting-minutes/           # 工作流 2:纪要整理
-    ├── CLAUDE.md              #   纪要 SOP(触发/硬规则/落盘约定)
-    └── meeting-minutes/       #   skill 包(规范 + 渲染脚本 + 示例)
-        ├── SKILL.md
-        ├── references/        #   字段抽取 / JSON schema / HTML 质量规范
-        ├── scripts/render_minutes.py   # 纯标准库,Python 3.8+
-        └── examples/          #   示例产物(虚构数据渲染)
+├── meeting-minutes/           # 工作流 2:纪要整理
+│   ├── CLAUDE.md              #   纪要 SOP(触发/硬规则/落盘约定)
+│   └── meeting-minutes/       #   skill 包(规范 + 渲染脚本 + 示例)
+│       ├── SKILL.md
+│       ├── references/        #   字段抽取 / JSON schema / HTML 质量规范
+│       ├── scripts/render_minutes.py   # 纯标准库,Python 3.8+
+│       └── examples/          #   示例产物(虚构数据渲染)
+└── jd-poster/                 # 工作流 3:JD 海报
+    ├── CLAUDE.md              #   出图 SOP(选宽度判据 + 自检四问)
+    ├── jd_poster.html         #   单文件海报模板
+    ├── scripts/               #   sweep_width.py + render_poster.py
+    └── examples/              #   范本海报 PNG
 ```
 
 ### 工作流 1:简历筛选(`resume-screening/`)
@@ -61,9 +69,19 @@ ai-native-recruiting/
 - **五字段回溯校验**:落盘前公司/title/薪资/经历/动机逐一回原文找支撑
 - **三件套落盘**:原文 + structured.json + HTML,以后任何争议都能回查原文
 
+### 工作流 3:JD 海报(`jd-poster/`)
+
+把 JD 变成能直接发朋友圈/社群的招聘海报 PNG。单文件 HTML 模板 + Playwright 3x 截图,改一次模板所有海报统一升级。
+
+难点不在生成,在**排版质量**:海报是窄幅长图,bullet 长短不一,宽度选错就出现"第二行只剩两三个字"的短尾,观感立刻掉档。所以这条工作流的核心是把排版判据量化,而不是靠肉眼反复试:
+
+- **`sweep_width.py`**:一次扫多个宽度,输出每个宽度的标题行数、短尾条数、末行填充均值 → 按判据挑最优宽度
+- **`render_poster.py`**:出图同时逐条打印 bullet 行数与末行填充率,自动标短尾;`scrollW ≠ 宽度` 就是右侧白条的成因
+- **硬规则**:交付前必须过四条自检(标题 1 行 / 无溢出 / 无短尾 / 底部无多余空白),不满意就调宽度重出——第一版几乎总有短尾
+
 ## 快速开始
 
-前置:安装 [Claude Code](https://claude.com/claude-code),Python 3.8+(渲染脚本零第三方依赖)。
+前置:安装 [Claude Code](https://claude.com/claude-code),Python 3.8+。渲染纪要零第三方依赖;简历筛选需 `pymupdf`,海报需 `playwright`。
 
 ```bash
 git clone <本仓库>
@@ -86,6 +104,15 @@ claude
 ```
 
 产物落在 `纪要档案/<日期>_<候选人>/`,浏览器直接打开 HTML。
+
+海报:
+
+```bash
+cd ../jd-poster
+py -3.12 -m http.server 8877 --directory .   # 另开一个终端
+claude
+> [贴 JD] 做张海报
+```
 
 > 使用 Codex 的用户:把各目录的 `CLAUDE.md` 复制为 `AGENTS.md` 即可,内容通用。
 

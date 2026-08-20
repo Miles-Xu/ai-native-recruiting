@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=400">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { overflow: hidden; }
+
+body {
+  width: 400px;
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: linear-gradient(155deg, #f4f8ff 0%, #ffffff 40%, #ffffff 60%, #f0fdf7 100%);
+  color: #1a1a1a;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.top-bar {
+  height: 6px;
+  background: linear-gradient(90deg, #1450dc, #00b4c8, #00c882);
+}
+
+.deco-circle {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 200, 130, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.deco-circle-2 {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(20, 80, 220, 0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.content {
+  padding: 22px 24px 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.logo-svg { height: 26px; }
+.tag {
+  background: linear-gradient(135deg, #1450dc, #00b4c8, #00c882);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 18px;
+  border-radius: 18px;
+  box-shadow: 0 4px 14px rgba(0, 180, 200, 0.3);
+  letter-spacing: 1px;
+}
+
+.title-block { margin-bottom: 12px; }
+h1 {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.3;
+  background: linear-gradient(135deg, #1a1a1a 60%, #1450dc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+h1 .sub {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 3px;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #333 40%, #00b4c8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, #1450dc22, #00c88233, transparent);
+  margin: 10px 0;
+}
+
+.section { margin-bottom: 10px; }
+
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  padding-left: 12px;
+  position: relative;
+  color: #1a1a1a;
+}
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 2px; bottom: 2px;
+  width: 4px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #1450dc, #00c882);
+}
+.section-note {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #8b94a3;
+  margin-left: 6px;
+}
+
+ul { list-style: none; padding: 0; }
+ul li {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #3a3a3a;
+  padding-left: 14px;
+  position: relative;
+  margin-bottom: 2px;
+}
+ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1450dc, #00c882);
+}
+ul li b { color: #1450dc; font-weight: 700; }
+
+/* 三个方向：分线卡片 */
+.lane {
+  border-radius: 9px;
+  padding: 8px 12px 8px 13px;
+  margin-bottom: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.lane::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+}
+.lane-1 { background: linear-gradient(100deg, rgba(20,80,220,0.055), rgba(20,80,220,0.012)); }
+.lane-1::before { background: #1450dc; }
+.lane-2 { background: linear-gradient(100deg, rgba(0,180,200,0.06), rgba(0,180,200,0.012)); }
+.lane-2::before { background: #00b4c8; }
+.lane-3 { background: linear-gradient(100deg, rgba(0,200,130,0.06), rgba(0,200,130,0.012)); }
+.lane-3::before { background: #00c882; }
+
+.lane-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.lane-no {
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 7px;
+  flex-shrink: 0;
+}
+.lane-1 .lane-no { background: #1450dc; }
+.lane-2 .lane-no { background: #00b4c8; }
+.lane-3 .lane-no { background: #00c882; }
+.lane-name {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+.lane-en {
+  font-size: 10px;
+  font-weight: 600;
+  color: #9aa4b2;
+  margin-left: 7px;
+  letter-spacing: 0.3px;
+}
+.lane p {
+  font-size: 12.5px;
+  line-height: 1.62;
+  color: #3a3a3a;
+}
+.lane p b { color: #1450dc; font-weight: 700; }
+.lane-2 p b { color: #0093a5; }
+.lane-3 p b { color: #009e66; }
+.lane ul li {
+  font-size: 12.5px;
+  line-height: 1.58;
+  margin-bottom: 0;
+}
+.lane ul li::before { top: 7.5px; width: 4px; height: 4px; }
+.lane-1 ul li::before { background: #1450dc; }
+.lane-2 ul li::before { background: #00b4c8; }
+.lane-3 ul li::before { background: #00c882; }
+.lane-2 ul li b { color: #0093a5; }
+.lane-3 ul li b { color: #009e66; }
+
+/* Footer */
+.footer-block {
+  margin-top: 2px;
+  background: linear-gradient(135deg, #f8fbff, #f5fdfb);
+  border: 1px solid rgba(20, 80, 220, 0.08);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+.footer-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.footer-row:last-child { margin-bottom: 0; }
+.footer-label {
+  font-weight: 700;
+  color: #1a1a1a;
+  min-width: 90px;
+}
+.footer-value { color: #555; margin-left: 16px; }
+.footer-value.email {
+  color: #1450dc;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.slogan {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #bbb;
+  text-align: center;
+}
+
+.bottom-bar {
+  height: 6px;
+  background: linear-gradient(90deg, #00c882, #00b4c8, #1450dc);
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+<div class="deco-circle"></div>
+<div class="deco-circle-2"></div>
+
+<div class="content">
+  <div class="header">
+    <svg class="logo-svg" viewBox="0 0 135 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 0C8.05758 0 0 8.05758 0 18C0 27.9424 8.05758 36 18 36C27.9424 36 36 27.9424 36 18C36 8.05758 27.9424 0 18 0ZM13.1431 29.4208H6.56393V22.8417H13.1431V29.4208ZM21.2769 29.4208H14.6977V22.8417H21.2769V29.4208ZM21.2769 21.2921H14.6977V14.713H21.2769V21.2921ZM21.2769 13.1634H14.6977V6.58425H21.2769V13.1634ZM29.4107 13.1583H22.8315V6.57917H29.4107V13.1583Z" fill="#000"/>
+      <path d="M59.7221 21.5618C59.7221 24.5695 57.4461 26.8607 53.0769 26.8607C49.3682 26.8607 46.4266 24.9302 46.2793 21.4755H49.2056C49.3936 23.3552 50.9533 24.3713 53.209 24.3713C55.4647 24.3713 56.8212 23.1977 56.8212 21.6889C56.8212 20.3324 55.8051 19.5195 53.2192 18.7574L51.6341 18.3104C48.6468 17.4518 46.8026 16.1309 46.8026 13.4331C46.8026 10.4052 49.5867 8.42383 53.2344 8.42383C56.8822 8.42383 59.4478 10.5068 59.5646 13.5297H56.6942C56.4605 11.9039 55.1853 10.9082 53.143 10.9082C51.1006 10.9082 49.7188 11.9141 49.7188 13.4077C49.7188 14.7033 50.8314 15.4552 53.0973 16.1105L54.4791 16.5017C57.9237 17.5077 59.7221 18.9403 59.7221 21.5669V21.5618Z" fill="#000"/>
+      <path d="M65.3767 22.7456V15.8565H67.8254V13.3061H65.3767V10.3646H62.6129V13.3061H60.4232V15.8565H62.6129V22.7761C62.6129 25.7786 64.4927 26.6474 66.2708 26.7388C67.1599 26.7845 68.0744 26.6626 68.0744 26.6626V24.3866C67.7645 24.4018 67.5663 24.4272 67.1853 24.4272C66.5147 24.4272 65.3716 24.3053 65.3716 22.7456H65.3767Z" fill="#000"/>
+      <path d="M77.6471 22.7515C77.0883 23.8996 76.0823 24.4229 74.7055 24.4636C72.7648 24.4128 71.5557 23.2747 71.3067 21.0902H80.8071C80.8325 20.8006 80.8529 20.5008 80.8529 20.1909C80.8529 15.8827 78.1043 13.5508 74.7106 13.5508C71.3169 13.5508 68.5684 15.8776 68.5684 20.1909C68.5684 24.5042 71.0781 26.826 74.7106 26.826C77.7182 26.826 79.6082 25.4136 80.4718 22.7515H77.6471ZM74.7055 15.8929C76.5954 15.9437 77.7894 16.848 78.084 18.931H71.327C71.6217 16.848 72.8156 15.9437 74.7055 15.8929Z" fill="#000"/>
+      <path d="M95.1328 20.2409C95.1328 24.3561 92.2725 26.8455 88.9398 26.8455C87.5426 26.8455 86.0693 26.3527 85.0735 25.4535V31.4128H82.3098V13.7227H85.0735V14.9471C86.0693 14.0479 87.5426 13.5551 88.9398 13.5551C92.115 13.5551 95.1328 16.1359 95.1328 20.2409ZM92.3894 20.2003C92.3894 17.467 90.8348 15.9683 88.9194 15.9683C87.0041 15.9683 85.0685 17.467 85.0685 20.2003C85.0685 22.9336 87.0041 24.4323 88.9194 24.4323C90.8348 24.4323 92.3894 22.9336 92.3894 20.2003Z" fill="#000"/>
+      <path d="M99.7517 11.8513V16.8454H107.271V19.6498H99.7517V26.8894H96.8203V9.04688H107.271V11.8513H99.7517Z" fill="#000"/>
+      <path d="M120.513 14.1426V26.8843H117.759V25.9495C117.119 26.7726 115.854 27.3365 113.807 27.2146C111.759 27.0926 108.914 25.5024 108.914 21.9665V14.1426H111.668V21.687C111.668 23.6227 112.968 24.6438 114.523 24.6438C116.077 24.6438 117.759 23.5719 117.759 20.9758V14.1426H120.513Z" fill="#000"/>
+      <path d="M122.703 26.8932V14.1515H125.457V15.0863C126.097 14.2633 127.362 13.6993 129.409 13.8213C131.457 13.9432 134.302 15.5334 134.302 19.0694V26.8932H131.548V19.3488C131.548 17.4131 130.248 16.392 128.693 16.392C127.138 16.392 125.457 17.4639 125.457 20.06V26.8932H122.703Z" fill="#000"/>
+    </svg>
+    <div class="tag">热招岗位</div>
+  </div>
+
+  <div class="title-block">
+    <h1>阶跃星辰 HR 实习生<span class="sub">三个方向 · 同时开放</span></h1>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">岗位职责<span class="section-note">根据个人兴趣与特长，侧重以下一个或多个方向</span></div>
+
+    <div class="lane lane-1">
+      <div class="lane-head">
+        <div class="lane-no">1</div>
+        <div class="lane-name">大模型招聘</div>
+        <div class="lane-en">FULL-CYCLE</div>
+      </div>
+      <ul>
+        <li>面向大模型核心业务团队，参与关键人才的识别、吸引与引进，推进社招/校招人才寻访、简历筛选与评估、面试跟进及候选人沟通维护；</li>
+        <li>围绕重点业务方向和目标公司开展竞品研究及<b>人才 mapping</b>，梳理关键团队、核心人才与人才流动；</li>
+        <li>运用 AI 工具提升筛选精准度与推进速度，参与内推项目、招聘系统运营维护及招聘数据的统计整理。</li>
+      </ul>
+    </div>
+
+    <div class="lane lane-2">
+      <div class="lane-head">
+        <div class="lane-no">2</div>
+        <div class="lane-name">校园招聘</div>
+        <div class="lane-en">CAMPUS</div>
+      </div>
+      <ul>
+        <li>跟踪目标院校实验室及顶尖学生论文/竞赛动态，搭建大模型核心领域<b>校招人才地图</b>；</li>
+        <li>关注目标学生群体的活跃渠道并开展日常建联转化；</li>
+        <li>参与校园招聘及校企合作活动的策划与落地。</li>
+      </ul>
+    </div>
+
+    <div class="lane lane-3">
+      <div class="lane-head">
+        <div class="lane-no">3</div>
+        <div class="lane-name">AI 招聘效率工具</div>
+        <div class="lane-en">AI-NATIVE</div>
+      </div>
+      <ul>
+        <li>用 Agent/大模型工具（Claude Code、Codex、Cursor 等）把简历筛选、消息回复等高频招聘动作沉淀为<b>可复用的 Skill 与工作流</b>；</li>
+        <li>推动渠道建联、初筛、回复的半自动化；迭代评估/话术类 prompt 并回测调优；</li>
+        <li>搭建人才 mapping 与招聘数据看板，替代人工统计。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">任职要求</div>
+    <ul>
+      <li>国内外本科及以上学历在读，专业不限，<b>对 AI 行业有浓厚兴趣</b>，愿意主动了解 AI 领域人才特点与行业动态；研发、计算机、数据等相关专业或有自学编程经历者加分。</li>
+      <li>有好奇心、责任心强、自驱力强，工作积极主动、细致严谨，具备良好的逻辑思维、沟通表达能力和执行力，能快速适应初创公司快节奏工作氛围。</li>
+      <li>熟练使用 Office 办公软件，愿意主动学习并运用 AI 工具辅助招聘工作，有 AI 招聘工具使用经验者优先；</li>
+      <li>优先 <b>28 届及以后</b>毕业同学，实习期不短于 3 个月，每周至少出勤 4 天，能稳定投入实习工作；可长期实习（6 个月及以上）者优先。</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">加分项</div>
+    <ul>
+      <li>熟悉 Boss 直聘、脉脉等主流招聘渠道；具备 PS 基础、能独立设计招聘海报；</li>
+      <li>熟练使用至少一类主流 Agent/AI 编程工具、有 <b>Vibe Coding 实操经验</b>、对不同模型的能力边界有实际判断。</li>
+      <li>了解 AI 相关岗位（算法/工程/产品等）基本任职要求，能读懂技术论文摘要或 GitHub 项目简介；</li>
+      <li>有数据分析、运营类实习或大厂研发/算法招聘支持经验，或做过流程提效类工具（可在简历中附作品链接）。</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="footer-block">
+    <div class="footer-row">
+      <div class="footer-label">工作地点</div>
+      <div class="footer-value">北京 / 上海</div>
+    </div>
+    <div class="footer-row">
+      <div class="footer-label">简历投递</div>
+      <div class="footer-value email">kira@miles.com</div>
+    </div>
+  </div>
+
+  <div class="slogan">期待与你一起，Scale-up possibilities for everyone</div>
+</div>
+
+<div class="bottom-bar"></div>
+
+</body>
+</html>
