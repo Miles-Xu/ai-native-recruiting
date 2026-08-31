@@ -10,12 +10,12 @@
 import pathlib
 import sys
 
-import fitz
+import pymupdf
 
 SRC = pathlib.Path(sys.argv[1])
 OUT = pathlib.Path(sys.argv[2]) if len(sys.argv) > 2 else None
 
-doc = fitz.open(SRC)
+doc = pymupdf.open(SRC)
 pages = [page.get_text() for page in doc]
 doc.close()
 

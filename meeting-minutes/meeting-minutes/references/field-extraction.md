@@ -1,19 +1,19 @@
-# Field Extraction Reference
+# 字段抽取参考
 
-## Interview Minutes Fields
+## 面试纪要字段
 
-- `name`: document title first; otherwise explicit self-introduction in transcript; if absent use `候选人（姓名未明确）`
-- `role`: current or recent company + team/role explicitly stated in transcript
-- `loc`: current city, expected base, or remote preference explicitly stated
-- `bg`: stack / domain / education / years of experience explicitly mentioned
-- `expect`: only explicit salary numbers or ranges
-- `avail`: explicit interview availability
-- `process`: explicit current pipeline status, offer status, or ongoing company process
-- `rounds`: explicit completed rounds or planned rounds with evaluation style
-- `notes`: explicit risks, conflicts, time pressure, location limits, salary gap, urgency
-- `date`: document date if available
+- `name`：优先取文档标题；否则取转写里明确的自我介绍；都没有就用「候选人（姓名未明确）」
+- `role`：转写里明确提到的当前/最近公司 + 团队/角色
+- `loc`：转写里明确提到的当前城市、期望 base 或远程偏好
+- `bg`：转写里明确提到的技术栈 / 领域 / 教育 / 年限
+- `expect`：只写明确出现的薪资数字或区间
+- `avail`：明确给出的面试可约时间
+- `process`：明确提到的当前流程状态、offer 状态或进行中的公司流程
+- `rounds`：明确提到的已完成轮次或计划轮次及考察方式
+- `notes`：明确提到的风险、冲突、时间压力、地点限制、薪资差距、紧迫度
+- `date`：文档日期（如有）
 
-## 📋 推荐评语段（HARD — 每次纪要末尾必出）
+## 推荐评语段（每份纪要末尾必出）
 
 格式固定，5 字段各自独立不交叉：
 
@@ -30,46 +30,49 @@
 
 - 流程靠前（刚投/初面）：简述即可，如「刚启动面试」「流程偏早期」
 - 流程靠中（在面多家）：列出已知公司名
-- 流程靠后（已有 offer/终面）：**必须加 ⚠️ 前缀**，写明 offer 数量、公司类型、deadline 压力
+- 流程靠后（已有 offer/终面）：必须加 ⚠️ 前缀，写明 offer 数量、公司类型、deadline 压力
 - 若原文未提及任何流程信息：写「未明确提及」
 
-## Hard Extraction Rules
+## 抽取硬规则
 
-- Only extract facts from the current document
-- Do not carry facts across documents
-- Do not infer location from company city
-- Do not infer salary from level/title
-- Do not convert vague wishes into numbers
-- Do not output recommendation/reject/waiting unless the transcript says so
-- **Speaker disambiguation (HARD):** HR（访谈方）说的观点/介绍/卖点不得写成候选人认同或期待；HR 抛的信息只能标注为「HR 介绍/同步」，不能用「候选人认可/看好/期待」等措辞
+- 只从当前文档提取事实
+- 不跨文档带事实
+- 不根据公司城市推断地点
+- 不根据 level/title 推断薪资
+- 不把模糊意愿转成数字
+- 转写没说推荐/不推荐/观望，就不输出这些结论
+- **说话人归属**：HR（访谈方）说的观点/介绍/卖点不得写成候选人认同或期待；HR 抛的信息只能标注为「HR 介绍/同步」，不能用「候选人认可/看好/期待」等措辞
 
-## Missing Fields
+## 缺失字段
 
-Use `未明确提及` when a field is missing.
+字段缺失写「未明确提及」。
 
-If more than half of the key interview fields are missing, downgrade output:
-- use a brief minutes card
-- or use an information-insufficient card
+关键面试字段缺一半以上时降级输出：
+
+- 用简版纪要卡片
+- 或用信息不足卡片
 
 例外：推荐评语的 5 个字段即使部分为「未明确提及」，仍需全部列出，不可因缺失而跳过整个推荐评语段。
 
-## Classification Hints
+## 分类线索
 
-- `interview`: candidate background, salary, rounds, offer, availability
-- `technical`: architecture, design, performance, trade-off, implementation debate
-- `product`: PRD, priority, user need, schedule, product decision
-- `general`: everything else
+- `interview`：候选人背景、薪资、轮次、offer、可约时间
+- `technical`：架构、设计、性能、trade-off、实现方案讨论
+- `product`：PRD、优先级、用户需求、排期、产品决策
+- `general`：其他
 
-Priority order:
+优先级：
+
 1. interview
 2. technical
 3. product
 4. general
 
-## Downgrade Conditions
+## 降级条件
 
-Use information-insufficient mode when:
-- transcript is only title or greeting
-- transcript is heavily truncated
-- transcript has severe speaker confusion and almost no stable facts
-- transcript does not contain enough material for safe summarization
+以下情况走信息不足模式：
+
+- 转写只有标题或寒暄
+- 转写严重截断
+- 多人混讲严重、几乎无稳定事实
+- 内容不足以安全概括
