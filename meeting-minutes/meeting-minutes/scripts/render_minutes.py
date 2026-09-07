@@ -1,5 +1,5 @@
-# render_minutes.py —— 把结构化纪要 JSON 渲染成商务报告风 HTML,并原子落盘三件套(原文 + HTML + JSON)
-# 用法: py -3.12 render_minutes.py --structured x.json [--transcript y.txt] [--out-dir 纪要档案] [--date YYYY-MM-DD]
+# 将结构化纪要 JSON 渲染成 HTML 并保存；提供转写时一并归档原文。
+# 仓库入口: ./run minutes --structured x.json [--transcript y.txt] [--out-dir 纪要档案] [--date YYYY-MM-DD]
 
 import argparse
 import datetime
@@ -114,7 +114,7 @@ def render_reco(reco):
             f"<td class=\"f-value\">{value}</td></tr>"
         )
     return (
-        '<div class="reco"><div class="reco-h">📋 推荐评语</div>'
+        '<div class="reco"><div class="reco-h">📋 沟通摘要</div>'
         "<table>" + "".join(rows) + "</table></div>"
     )
 
@@ -178,6 +178,16 @@ def write_utf8(path, text):
         f.write(text)
 
 
+def validate_date(value, source):
+    if not isinstance(value, str) or not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", value):
+        raise ValueError(f"{source} 必须是有效的 YYYY-MM-DD 日期")
+    try:
+        datetime.date.fromisoformat(value)
+    except ValueError:
+        raise ValueError(f"{source} 必须是有效的 YYYY-MM-DD 日期") from None
+    return value
+
+
 def main():
     ap = argparse.ArgumentParser(description="结构化纪要 JSON → 商务报告风 HTML + 落盘三件套")
     ap.add_argument("--structured", required=True, help="结构化纪要 JSON 文件路径")
@@ -189,14 +199,20 @@ def main():
     with open(args.structured, "r", encoding="utf-8") as f:
         data = json.load(f)
 
+    try:
+        cli_date = validate_date(args.date, "--date") if args.date is not None else None
+        json_date = validate_date(data["date"], "JSON date") if "date" in data else None
+    except ValueError as exc:
+        ap.error(str(exc))
+    date = cli_date or json_date or datetime.date.today().isoformat()
+    data["date"] = date
+
     transcript_text = ""
     if args.transcript:
         with open(args.transcript, "r", encoding="utf-8") as f:
             transcript_text = f.read()
 
-    date = args.date or data.get("date") or datetime.date.today().isoformat()
     candidate = data.get("candidate_name") or data.get("title") or "纪要"
-    data.setdefault("date", date)
     if not data.get("generated_at"):
         data["generated_at"] = datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M %Z")
 

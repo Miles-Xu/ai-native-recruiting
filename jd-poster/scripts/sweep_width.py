@@ -1,18 +1,30 @@
-# sweep_width.py —— 扫描多个海报宽度，按「短尾数量」挑最优宽度（只测量，不截图）
-#
-# 依赖：本地 http 服务已启动（py -3.12 -m http.server 8877 --directory .）
-# 用法：py -3.12 scripts/sweep_width.py jd_poster.html 380,400,420,440,460
-#
-# 输出每个宽度的：整页高度 / 标题行数 / 短尾条数 / 次短条数 / 末行填充均值
-# 挑宽度的判据：标题必须 1 行；短尾=0 优先；再看末行填充均值大的
+# 比较不同宽度下的海报换行。输入可为本地 HTML 或 HTTP(S) URL。
+# 仓库入口：./run widths jd-poster/jd_poster.html 380,400,420,440,460
 
-import sys
+import argparse
+from pathlib import Path
+from urllib.parse import urlsplit
+
 from playwright.sync_api import sync_playwright
 
-BASE_URL = "http://127.0.0.1:8877"
+parser = argparse.ArgumentParser(description="Compare poster widths for a local HTML file or HTTP(S) URL.")
+parser.add_argument("html", help="HTML file path or HTTP(S) URL")
+parser.add_argument("widths", help="Comma-separated widths in CSS pixels")
+args = parser.parse_args()
+try:
+    WIDTHS = [int(width) for width in args.widths.split(",")]
+except ValueError:
+    parser.error("widths must be comma-separated integers")
+if any(width <= 0 for width in WIDTHS):
+    parser.error("widths must be greater than zero")
 
-HTML = sys.argv[1]
-WIDTHS = [int(w) for w in sys.argv[2].split(",")]
+if urlsplit(args.html).scheme.lower() in ("http", "https"):
+    url = args.html
+else:
+    source = Path(args.html).expanduser().resolve()
+    if not source.is_file():
+        parser.error(f"HTML file not found: {source}")
+    url = source.as_uri()
 
 MEASURE = r"""
 () => {
@@ -50,14 +62,15 @@ with sync_playwright() as p:
     for w in WIDTHS:
         ctx = browser.new_context(viewport={'width': w, 'height': 900})
         page = ctx.new_page()
-        page.goto(f'{BASE_URL}/{HTML}')
+        page.goto(url)
         page.add_style_tag(content=f'body{{width:{w}px !important}}')
         page.wait_for_load_state('networkidle')
+        page.evaluate('() => document.fonts.ready')
         d = page.evaluate(MEASURE)
         items = d['items']
         bad = [i for i in items if i['lines'] > 1 and i['fill'] < 30]
         mid = [i for i in items if i['lines'] > 1 and 30 <= i['fill'] < 45]
         avg = sum(i['fill'] for i in items if i['lines'] > 1) / max(1, len([i for i in items if i['lines'] > 1]))
-        print(f"w={w:4d} h={d['height']:5d} h1行={d['h1lines']} 短尾={len(bad)} 次短={len(mid)} 末行均值={avg:.1f}%")
+        print(f"w={w:4d} h={d['height']:5d} scrollW={d['scrollW']} h1行={d['h1lines']} 短尾={len(bad)} 次短={len(mid)} 末行均值={avg:.1f}%")
         ctx.close()
     browser.close()

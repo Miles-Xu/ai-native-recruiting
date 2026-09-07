@@ -1,0 +1,61 @@
+name: Workflow Checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  workflows:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    env:
+      RECRUITING_BROWSER_TESTS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.12.7"
+      - name: Prepare OCR (macOS / Linux)
+        if: runner.os != 'Windows'
+        run: ./run setup-ocr
+      - name: Prepare OCR (Windows)
+        if: runner.os == 'Windows'
+        run: .\run.cmd setup-ocr
+      - name: Prepare browser (macOS / Linux)
+        if: runner.os != 'Windows'
+        run: ./run setup-browser --with-deps
+      - name: Prepare browser (Windows)
+        if: runner.os == 'Windows'
+        run: .\run.cmd setup-browser
+      - name: Check browser (macOS / Linux)
+        if: runner.os != 'Windows'
+        run: ./run doctor --browser
+      - name: Check browser (Windows)
+        if: runner.os == 'Windows'
+        run: .\run.cmd doctor --browser
+      - name: Test workflows (macOS / Linux)
+        if: runner.os != 'Windows'
+        run: ./run test -v
+      - name: Test workflows (Windows)
+        if: runner.os == 'Windows'
+        run: .\run.cmd test -v
+      - name: Export poster preview (macOS / Linux)
+        if: runner.os != 'Windows'
+        run: ./run poster jd-poster/jd_poster.html 440 jd-poster/_tmp/ci/poster.png
+      - name: Export poster preview (Windows)
+        if: runner.os == 'Windows'
+        run: .\run.cmd poster jd-poster/jd_poster.html 440 jd-poster/_tmp/ci/poster.png
+      - name: Keep poster preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: poster-${{ matrix.os }}
+          path: jd-poster/_tmp/ci/poster.png
+          if-no-files-found: error
+          retention-days: 14

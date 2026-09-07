@@ -1,18 +1,20 @@
-# AI Native 招聘工作流 — 根目录
+# AI Native 招聘工作流
 
-本仓库有三条独立工作流，各自的 SOP 在子目录的 `CLAUDE.md` 里：
+根据任务读取对应说明，在当前会话继续处理。文件路径以仓库根目录为基准；执行子目录中的命令时，调整工作目录或补全路径。
 
-- **简历筛选** → `cd resume-screening` 后再工作
-- **纪要整理** → `cd meeting-minutes` 后再工作
-- **JD 海报** → `cd jd-poster` 后再工作
-
-## 如果用户在根目录直接发起任务
-
-- 甩简历 PDF 路径 / 说要筛简历 → 提示用户进入 `resume-screening/` 目录操作（那里的 CLAUDE.md 才有完整 SOP 和岗位库）；如果用户坚持在根目录做，读取 `resume-screening/CLAUDE.md` 后按其规范执行
-- 粘贴会议/面试转写 → 同理，指向 `meeting-minutes/`
-- 说要做 JD 海报 / 招聘海报 → 指向 `jd-poster/`（那里有模板和出图脚本，且需要先起本地 http 服务）
-- 问这个仓库是什么 → 读 `README.md` 回答
+| 任务 | 先读 |
+|------|------|
+| 简历筛选、岗位匹配 | `resume-screening/CLAUDE.md` |
+| 会议或面试纪要 | `meeting-minutes/CLAUDE.md` |
+| JD 招聘海报 | `jd-poster/CLAUDE.md` |
+| 仓库介绍、环境准备 | `README.md` |
 
 ## 通用约定
 
-- 所有候选人数据、临时文件放各子目录的 `_tmp/`，永不提交 git
+- 执行命令统一用根目录 `./run`（Windows 为 `.\run.cmd`），环境说明见 `README.md`。不要遇到错误就改换系统 Python 或全局安装依赖。
+- 读取任何 PDF 前，先读 `docs/pdf-reading.md`。用 `./run pdf` 生成文本、逐页图片和状态报告，核对完整性后再分析。
+- 用户指定的任务范围、输出格式和保存位置优先；各流程中的默认值用于未指定的情况。
+- 先使用已有文件和本轮提供的信息，只询问影响当前任务、且尚未明确的内容。
+- 示例岗位和筛选偏好用于演示，不自动用于真实招聘。真实岗位按用户提供或已确认的要求处理。
+- 临时文件放对应子目录的 `_tmp/`；筛选结论默认放 `resume-screening/推荐/`，纪要放 `meeting-minutes/纪要档案/`。这些路径已被 `.gitignore` 忽略。
+- 说明事实、依据和待确认项，少用宣传语、执行过程自述和重复的强调句。

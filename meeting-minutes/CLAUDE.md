@@ -1,80 +1,25 @@
-# 纪要整理 —— 工作目录说明
+# 纪要整理
 
-## 这个目录是干嘛的
+将面试或会议转写整理成可回查的纪要。默认生成 HTML，并保存结构化数据和原文；用户指定纯文本或其他交付方式时按其要求处理。
 
-HR/招聘者开完会/面试后,直接把**录音转写文本**粘进这个目录的 Claude 窗口。你的任务:把转写整理成一份**商务报告风 HTML 纪要**,并**归档落盘**(原文 + HTML + structured.json 三件套),以后能随时翻出每次的原文和成品。
+处理前读取 [meeting-minutes/SKILL.md](meeting-minutes/SKILL.md)。字段提取、来源核对和交付检查统一在那里维护。
 
-## 触发
+## 本仓库的路径
 
-满足任一条就走本流程,而不是随手回一段文本总结:
-- 用户粘贴会议/面试转写 + "做个纪要 / 面试纪要 / 会议记录 / 总结下 / 整理一下"
-- 用户直接贴进来一大段明显是录音转写的对话文本
+- 临时 JSON 和转写：`_tmp/<记录名>.json`、`_tmp/<记录名>.txt`
+- 默认归档：`纪要档案/<YYYY-MM-DD>_<候选人或会议主题>/`
+- 以上目录均已被 Git 忽略。
 
-**除非用户明确说"不需要落盘 / 只在这里文本给我"**,否则默认产物必须是 HTML 并落盘三件套,不能只回纯文本就算完成。
+从仓库根目录使用统一入口，默认归档路径不受当前工作目录影响：
 
-## 工作流
+```bash
+./run minutes --structured "meeting-minutes/_tmp/记录.json" --transcript "meeting-minutes/_tmp/记录.txt"
+```
 
-1. **读转写** —— 原文原样留好,后面要落成 `transcript.txt`
-2. **健康检查** —— 三档:可正常处理 / 可降级(碎片、多人混讲)/ 不适合(只有寒暄、严重截断 → 出"信息不足"纪要)
-3. **分类** —— interview / technical / product / general(优先级:interview > technical > product > general)
-4. **理解 + 提炼** —— 先通读理解全文,再提炼决策相关事实(不是扫一遍填空);可自由转述/归纳/组织,但绝不补原文没说过的事实。只从当前转写提取,绝不跨文档引用。字段清单见 `meeting-minutes/references/field-extraction.md`
-5. **组装 structured JSON** —— 形状见 `meeting-minutes/references/artifact-schema.md`;排版/语义色见 `meeting-minutes/references/html-quality.md`。先写到 `_tmp/<候选人>.json`,原文写到 `_tmp/<候选人>.txt`
-6. **防窜校验**(落盘前强制)—— 见下方硬规则
-7. **渲染 + 落盘**:
-   ```bash
-   python meeting-minutes/scripts/render_minutes.py --structured _tmp/<候选人>.json --transcript _tmp/<候选人>.txt
-   ```
-   (Windows 下建议 `py -3.12`;需要 Python 3.8+,无第三方依赖)
-   脚本落到 `纪要档案/<YYYY-MM-DD>_<候选人>/`:`纪要.html` + `structured.json` + `transcript.txt`。**三件齐全才算完成。**
-8. **自检验收** —— 见下方
+需要其他归档位置时，显式传入 `--out-dir`：
 
-## 硬规则(优先级最高)
+```bash
+./run minutes --structured "meeting-minutes/_tmp/记录.json" --transcript "meeting-minutes/_tmp/记录.txt" --out-dir "meeting-minutes/_tmp/试跑归档"
+```
 
-- **候选人姓名以文件名为准**:录音转写工具对人名识别常有偏差,当文件名与转写正文中的称呼不一致时,以文件名为准
-- **只写转写明确出现的信息**;**禁止脑补**(面试官名字、对标公司、未陈述的结论都不准编)
-- **信息源只限本轮转写** —— 禁止调用记忆 / 过往对话 / 对该候选人的既有印象 / 任何外部背景知识来补充或佐证。做纪要 ≠ 招聘评估,不带历史判断;哪怕记忆里有这个人,也当没见过,产物和聊天说明都只基于本轮转写
-- **不写主观性内容** —— 评价 / 资历 / 潜力 / 性格 / 稳定性等判断一律不写,除非是会议原文或明确的会议结论(会上 HR 说的判断要标「HR 判断」)
-- **宁缺毋滥**:缺字段写「未明确提及」,不补完句子
-- **说话人归属**:HR(访谈方)说的观点/介绍/卖点 ≠ 候选人认同,只能标「HR 介绍/同步」
-- **五字段回溯校验**(落盘前逐一在原文找支撑,找不到就降级为「未明确提及」):公司名 / 角色title / 薪资总包 / 工作经历 / 看机会原因
-- **竞争公司 vs 当前公司消歧**:当前在职公司要有明确归属信号(「我现在在 XX 做」);正在面的公司只算流程信息,不写进「当前」;分不清就写「未明确提及」
-- **推荐评语必出**(5 字段,互不重复,不做风险主观判断):目前状态 / 目前&期望地点 / 基本情况(含职级)/ 当前流程(靠后阶段加 ⚠️ + offer 数 + deadline)/ 看机会原因。即使部分字段「未明确提及」也要全列
-- **不写元话术**:HTML 里别出现"未脑补/文档未明确所以不写"这类系统自述
-- **文档隔离**:每份转写独立处理;一个窗口内连续处理多份时,每份清零 context、串行完成(渲染落盘)再做下一份;并做跨文档实体比对防窜
-- **原文支持时才数字化**:薪资/年限/轮次/可约时间,原文模糊就保留原粒度,别瞎猜精确值
-
-## 内容结构
-
-一份完整纪要的 HTML 包含这些要素:
-- **header**:`title`(如「面试纪要 · 姓名」)+ `subtitle`(如「岗位 | 当前公司」)
-- **KPI 横条**:`kpi[]` 4 项以内,每项 `{label, value, tone}`,只放决策信息(总包/当前/进度/可约),语义色
-- **主体小节**:`sections[]` 3~4 个,每个 `{title, bullets[]}`;bullet 支持 `**加粗**`。**这是开放区**——决策相关但塞不进固定字段(KPI / 推荐评语)的信息都放这里,别因为"没槽位"而丢
-- **推荐评语**:`recommendation[]` 5 字段(见硬规则)
-- **页脚**:生成时间 + 来源(脚本自动加)
-- **折叠原文区**:底部可折叠的原文回查区(脚本自动内嵌 transcript)
-
-信息不足/技术类会议时,`kpi` 和 `recommendation` 可为空数组,脚本不会渲染空壳。
-
-## 落盘约定
-
-- 根目录:`纪要档案/`,**一会议一文件夹** `<YYYY-MM-DD>_<候选人或会议主题>/`
-- 日期默认当天(今天:见环境日期);可用 `--date` 覆盖
-- 脚本**自带防覆盖**(同名目录追加 `-2`/`-3`)、强制 UTF-8 无 BOM —— 不要用 PowerShell `Out-File` 手动覆写 HTML,会乱码
-- 临时 JSON/原文放 `_tmp/`
-
-## 验收
-
-- 已实际生成 HTML 并落盘三件套,不是只产了 JSON / 聊天纯文本
-- HTML 中姓名/公司/薪资/轮次都能在原文找到依据(无脑补)
-- 推荐评语 5 字段齐全,⚠️ 竞争行高亮
-- 信息不足时已降级,没硬凑完整纪要
-- 浏览器能正常打开,中文不乱码,折叠原文区可展开
-
-## 指针
-
-- 完整规范:`meeting-minutes/SKILL.md`
-- 字段抽取:`meeting-minutes/references/field-extraction.md`
-- 排版/语义色/质量:`meeting-minutes/references/html-quality.md`
-- structured JSON 规范:`meeting-minutes/references/artifact-schema.md`
-- 渲染脚本:`meeting-minutes/scripts/render_minutes.py`
-- 示例产物:`meeting-minutes/examples/interview-minutes.html`、`info-insufficient.html`
+Windows 将 `./run` 换成 `.\run.cmd`。运行环境见根目录 `README.md`，纪要处理不需要 OCR 或本地 HTTP 服务。

@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+repo_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+if ! command -v uv >/dev/null 2>&1; then
+    echo "uv is required. Install it from https://docs.astral.sh/uv/getting-started/installation/" >&2
+    exit 127
+fi
+export UV_CACHE_DIR="$repo_dir/.cache/uv"
+export UV_PYTHON_INSTALL_DIR="$repo_dir/.cache/python"
+export PLAYWRIGHT_BROWSERS_PATH="$repo_dir/.cache/browsers"
+export PYTHONUTF8=1
+export PYTHONIOENCODING=utf-8
+exec uv run --project "$repo_dir" --locked python "$repo_dir/scripts/workflow.py" "$@"

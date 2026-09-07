@@ -11,6 +11,8 @@ archive/
 *.jsonl
 __pycache__/
 *.pyc
+.venv/
+.cache/
 
 # 示例产物例外（虚构数据，需要入库给读者看）
 !resume-screening/examples/*.pdf
